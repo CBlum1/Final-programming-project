@@ -1,0 +1,146 @@
+from tkinter import *
+import hashlib
+import os
+import re
+myGui = Tk()
+myGui.geometry('500x400+700+250')
+myGui.title('Password Generator')
+guiFont = font = dict(family='Courier New, monospaced', size=18, color='#7f7f7f')
+eLabel = Label(myGui, text="Please Enter you Password:   ", font=guiFont)
+eLabel.grid(row=0, column=0)
+ePassword = Entry(myGui, show="*")
+ePassword.grid(row=0, column=1)
+def checkPassword():
+    strength = ['Password can not be Blank', 'Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong']
+    score = 1
+    password = ePassword.get()
+    if len(password) == 0:
+        passwordStrength.set(strength[0])
+        return
+    if len(password) < 4:
+        passwordStrength.set(strength[1])
+        return
+    if len(password) >= 8:
+        score += 1
+    if re.search("[0-9]", password):
+        score += 1
+    if re.search("[a-z]", password) and re.search("[A-Z]", password):
+        score += 1
+    if re.search(".", password):
+        score += 1
+    passwordStrength.set(strength[score])
+passwordStrength = StringVar()
+checkStrBtn = Button(myGui, text="Check Strength", command=checkPassword, height=2, width=25, font=guiFont)
+checkStrBtn.grid(row=2, column=0)
+checkStrLab = Label(myGui, textvariable=passwordStrength)
+checkStrLab.grid(row=2, column=1, sticky=W)
+md5pw = StringVar()
+hashLbl = Label(myGui, textvariable=md5pw)
+hashLbl.grid(row=3, column=1, sticky=W)
+lblVerify = Label(myGui, text="Enter Password to Verify:   ", font=guiFont)
+lblVerify.grid(row=5, column=0, sticky=W)
+myGui.mainloop()
+print("Hello, It is time to start creating your account!")
+from tkinter import *
+import sqlite3
+window=Tk()
+window.geometry("300x150")
+def login():
+	def login_database():
+		conn=sqlite3.connect("1.db")
+		cur=conn.cursor()
+		cur.execute("SELECT * FROM test WHERE email=? AND password=?",(e1.get(),e2.get()))
+		row=cur.fetchall()
+		conn.close()
+		print(row)
+		if row!=[]:
+			user_name=row[0][1]
+			l3.config(text="user name found with name: "+user_name)
+		else:
+			l3.config(text="user not found ")
+	window.destroy()
+	login_window=Tk()
+	login_window.geometry("400x250")
+	l1=Label(login_window,text="email",font="times 20")
+	l1.grid(row=1,column=1)
+	l2=Label(login_window,text="password",font="times 20")
+	l2.grid(row=2,column=1)
+	l3=Label(login_window,font="times 20")
+	l3.grid(row=5,column=2)
+	email_text=StringVar()
+	e1=Entry(login_window,textvariable=email_text)
+	e1.grid(row=1,column=2)
+	password_text=StringVar()
+	e2=Entry(login_window,textvariable=password_text)
+	e2.grid(row=2,column=2)
+	b1=Button(login_window,text="login",width=20,command=login_database)
+	b1.grid(row=4,column=2)
+	login_window.mainloop()
+	exit()
+def signup():
+	def signup_database():
+		conn=sqlite3.connect("1.db")
+		cur=conn.cursor()
+		cur.execute("CREATE TABLE IF NOT EXISTS test(id INTEGER PRIMARY KEY,name text,email text, password text)")
+		cur.execute("INSERT INTO test Values(Null,?,?,?)",(e1.get(),e2.get(),e3.get()))
+		l4=Label(signup_window,text="account created",font="times 15")
+		l4.grid(row=6,column=2)
+		conn.commit()
+		conn.close()
+	window.destroy()
+	signup_window=Tk()
+	signup_window.geometry("400x250")
+	l1=Label(signup_window,text="user name",font="times 20")
+	l1.grid(row=1,column=1)
+	l2=Label(signup_window,text="user email",font="times 20")
+	l2.grid(row=2,column=1)
+	l3=Label(signup_window,text="user password",font="times 20")
+	l3.grid(row=3,column=1)
+	name_text=StringVar()
+	e1=Entry(signup_window,textvariable=name_text)
+	e1.grid(row=1,column=2)
+	email_text=StringVar()
+	e2=Entry(signup_window,textvariable=email_text)
+	e2.grid(row=2,column=2)
+	password_text=StringVar()
+	e3=Entry(signup_window,textvariable=password_text)
+	e3.grid(row=3,column=2)
+	b1=Button(signup_window,text="login",width=20,command=signup_database)
+	b1.grid(row=4,column=2)
+l1=Label(window,text="what do you want to do",font="times 20")
+l1.grid(row=1,column=2,columnspan=2)
+
+b1=Button(window,text="login",width=20,command=login)
+b1.grid(row=2,column=2)
+
+b2=Button(window,text="signup",width=20,command=signup)
+b2.grid(row=2,column=3)
+window.mainloop()
+print("Its time to take your profile picture!")
+print("Press the spacebar to take your profile picture, if you do not like it you may repress the space button to take again, Once you are happy with you profile picture hit the escape button!")
+print("SMILE!")
+import cv2
+cam = cv2.VideoCapture(0)
+cv2.namedWindow("test")
+img_counter = 0
+while True:
+    ret, frame = cam.read()
+    if not ret:
+        print("failed to grab frame")
+        break
+    cv2.imshow("test", frame)
+
+    k = cv2.waitKey(3)
+    if k%256 == 27:
+        break
+    elif k%256 == 32:
+        # SPACE pressed
+        img_name = "Profile_Picture{}.png".format(img_counter)
+        cv2.imwrite(img_name, frame)
+        print("Profile picture taken".format(img_name))
+        img_counter += 1
+        exit()
+cam.release()
+cv2.destroyAllWindows()
+exit()
+print("You have successfully created and logged into your account.")
